@@ -60,21 +60,18 @@ export default function Home() {
     }
   }
 
-  const connectWallet = async () => {
-    try {
-      const {ethereum} = window;
-
-      if (!ethereum) {
-        console.log("please install MetaMask");
+  async function connectWallet() {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        await ethereum.request({ method: "eth_requestAccounts" })
+      } catch (error) {
+        console.log(error)
       }
-
-      const accounts = await ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-
-      setCurrentAccount(accounts[0]);
-    } catch (error) {
-      console.log(error);
+      connectButton.innerHTML = "Connected"
+      const accounts = await ethereum.request({ method: "eth_accounts" })
+      console.log(accounts)
+    } else {
+      connectButton.innerHTML = "Please install MetaMask"
     }
   }
   const buyGor = async (prod_no) => {
